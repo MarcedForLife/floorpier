@@ -26,4 +26,4 @@ Note that, you'll need to restart your browser to see any changes.
 
 ## Floorp Icon/Logo
 
-I don't *love* the official Floorp logo, so I have been using [Havn/Erlend's fantastic rendition](https://havn.blog/2024/05/03/what-if-the.html) instead (and included it in the repo).
+I don't *love* the official Floorp logo, so I have been using [Havn/Erlend's fantastic rendition](https://havn.blog/2024/05/03/what-if-the.html) instead (and included it [within the repo](./src/chrome/icons/floorp-havn.png)).
