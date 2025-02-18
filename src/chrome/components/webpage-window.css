@@ -3,9 +3,9 @@
 /* Add rounded corners around the webpage window */
 #main-window:has(#navigator-toolbox[style=""]) .browserStack>browser,
 :not([sizemode="fullscreen"]) .browserStack>browser {
-    border-radius: var(--custom-border-radius) !important;
-    margin-inline: var(--custom-main-window-vertical-margin) !important;
-    margin-block-end: var(--custom-main-window-horizontal-margin) !important;
+    border-radius: var(--floorpier-border-radius) !important;
+    margin-inline: var(--floorpier-main-window-vertical-margin) !important;
+    margin-block-end: var(--floorpier-main-window-horizontal-margin) !important;
 }
 
 [inFullscreen] #tabbrowser-tabpanels,

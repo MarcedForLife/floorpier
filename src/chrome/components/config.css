@@ -1,7 +1,7 @@
 /* Adjust the following config properties to your liking */
 :root {
-    --custom-border-radius: 10px;
-    --custom-main-window-vertical-margin: 0px;
-    --custom-main-window-horizontal-margin: 0px;
-    --custom-sidebar-splitter-width: 5px;
+    --floorpier-border-radius: 10px;
+    --floorpier-main-window-vertical-margin: 0px;
+    --floorpier-main-window-horizontal-margin: 0px;
+    --floorpier-sidebar-splitter-width: 5px;
 }
