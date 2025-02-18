@@ -1,0 +1,26 @@
+@import url('config.css');
+
+/* Hide sidebar titles */
+#sidebar-header {
+    display: none !important;
+}
+
+/* Remove the top navbar separator */
+#navigator-toolbox {
+    border-bottom: 0px !important;
+}
+
+/* Add rounded corners inside the sidebar */
+#sidebar {
+    border-radius: var(--custom-border-radius) !important;
+}
+#main-window {
+    --sidebar-background-color: var(--toolbar-bgcolor) !important;
+}
+
+/* Adjust the sidebar splitter */
+#sidebar-splitter {
+    width: var(--custom-sidebar-splitter-width) !important;
+    border-width: 0px !important;
+    background-color: var(--toolbar-bgcolor) !important;
+}
