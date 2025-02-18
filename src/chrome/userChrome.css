@@ -1,3 +1,4 @@
 /* Import desired component modifications */
 @import url('components/webpage-window.css');
 @import url('components/sidebar.css');
+@import url('components/findbar.css');

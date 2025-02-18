@@ -1,0 +1,4 @@
+/* Remove the border from the find/search bar */
+.browserContainer>findbar {
+    border-top: 0px !important;
+}
