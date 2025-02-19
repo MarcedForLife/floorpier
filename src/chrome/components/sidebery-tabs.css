@@ -1,0 +1,12 @@
+/* Originally sourced from VerticalFox (https://github.com/christorange/VerticalFox) */
+
+/* Active Tab */
+:root:not([lwt-default-theme-in-dark-mode]) .tab-background[selected],
+.tab-background[multiselected="true"] {
+    background: rgba(0, 0, 0, .05) !important;
+}
+
+:root[lwt-default-theme-in-dark-mode] .tab-background[selected],
+.tab-background[multiselected="true"] {
+    background: rgba(0, 0, 0, .2) !important;
+}
