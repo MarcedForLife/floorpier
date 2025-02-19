@@ -1,0 +1,49 @@
+/* Originally sourced from VerticalFox (https://github.com/christorange/VerticalFox) */
+
+#sidebar-box {
+    --uc-sidebar-width: 40px;
+    --uc-sidebar-hover-width: 260px;
+    --uc-autohide-sidebar-delay: 1ms;
+    /* Waiting time before hiding sidebar */
+    position: relative;
+    min-width: var(--uc-sidebar-width) !important;
+    width: var(--uc-sidebar-width) !important;
+    max-width: var(--uc-sidebar-width) !important;
+    z-index: 100;
+}
+
+#sidebar-box[positionend] {
+    direction: rtl;
+}
+
+#sidebar-box[positionend]>* {
+    direction: ltr;
+}
+
+#sidebar-box[positionend]:-moz-locale-dir(rtl) {
+    direction: ltr;
+}
+
+#sidebar-box[positionend]:-moz-locale-dir(rtl)>* {
+    direction: rtl;
+}
+
+#sidebar-splitter {
+    display: none;
+}
+
+#sidebar {
+    transition: min-width 115ms linear var(--uc-autohide-sidebar-delay) !important;
+    min-width: var(--uc-sidebar-width) !important;
+    will-change: min-width;
+}
+
+#sidebar-box:hover>#sidebar {
+    min-width: var(--uc-sidebar-hover-width) !important;
+    transition-delay: 0ms !important;
+}
+
+.sidebar-panel {
+    background-color: transparent !important;
+    color: var(--newtab-text-primary-color) !important;
+}
