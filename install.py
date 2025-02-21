@@ -27,6 +27,7 @@ from bs4 import BeautifulSoup
 SIDEBERY_EXTENSION_ID = '3c078156-979c-498b-8990-85f7987dd929'
 SIDEBERY_EXTENSION_FILENAME = f"{{{SIDEBERY_EXTENSION_ID}}}.xpi"
 SIDEBERY_CUSTOM_THEME_REL_DIR = 'themes/floorpier'
+SIDEBERY_CUSTOM_THEME_TAG_ID = 'floorpier_theme_link'
 
 # Theme source path
 THEME_SOURCE_DIR = 'src'
@@ -130,8 +131,13 @@ def _update_sidebery_themes(sidebery_build_dir: str):
                                         rel='stylesheet',
                                         type='text/css',
                                         href=f"../{SIDEBERY_CUSTOM_THEME_REL_DIR}/{component}.css",
-                                        id='theme_link')
-            soup.head.append(css_link_tag)
+                                        id=SIDEBERY_CUSTOM_THEME_TAG_ID)
+
+            # Replace the custom tag if it already exists (previously installed)
+            if existing_tag := soup.find(id=SIDEBERY_CUSTOM_THEME_TAG_ID):
+                existing_tag.replace_with(css_link_tag)
+            else:
+                soup.head.append(css_link_tag)
 
             # Overwrite the file with our modified version
             f.seek(0)
