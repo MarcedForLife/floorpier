@@ -36,9 +36,14 @@ THEME_SOURCE_DIR = 'src'
 
 # Build paths
 BUILD_DIR = 'build'
-PROFILE_BUILD_DIR = f"{BUILD_DIR}/profile"
-EXTENSIONS_BUILD_DIR = f"{BUILD_DIR}/extensions"
-SIDEBERY_THEME_BUILD_DIR = f"{BUILD_DIR}/sidebery"
+PROFILE_BUILD_DIR = os.path.join(BUILD_DIR, 'profile')
+EXTENSIONS_BUILD_DIR = os.path.join(BUILD_DIR, 'extensions')
+SIDEBERY_THEME_BUILD_DIR = os.path.join(BUILD_DIR, 'sidebery')
+
+# Backups
+BACKUP_DATETIME = datetime.now().strftime('%Y%m%d%H%M%S')
+BACKUP_DIR = os.path.join('backups', BACKUP_DATETIME)
+EXTENSIONS_BACKUP_DIR = os.path.join(BACKUP_DIR, 'extensions')
 
 def _get_profile_dir() -> str:
     match sys.platform:
@@ -85,13 +90,26 @@ def _prepare_files():
                 with open(output_file, 'w', encoding='utf-8') as f:
                     f.write(rendered_content)
 
-# TODO: Consider auto-backing up the existing profile
 def _install_user_chrome(profile_dir: str):
     user_input = input(
         f"You are about to copy the contents of '{PROFILE_BUILD_DIR}' into '{profile_dir}', continue? (y/n): ")
     if user_input.lower() == 'y':
+        _backup_user_js(profile_dir)
+        _backup_user_chrome(profile_dir)
         copytree(PROFILE_BUILD_DIR, profile_dir, dirs_exist_ok=True)
         print('Successfully installed the theme and options into the profile directory')
+
+def _backup_user_js(profile_dir: str):
+    os.makedirs(BACKUP_DIR, exist_ok=True)
+    user_js_path = os.path.join(profile_dir, 'user.js')
+    backup_path = copy(user_js_path, BACKUP_DIR)
+    print(f"Successfully backed up user.js to '{backup_path}'")
+
+def _backup_user_chrome(profile_dir: str):
+    os.makedirs(BACKUP_DIR, exist_ok=True)
+    user_chrome_path = os.path.join(profile_dir, 'chrome')
+    backup_path = copytree(user_chrome_path, os.path.join(BACKUP_DIR, 'chrome'))
+    print(f"Successfully backed up user chrome to '{backup_path}'")
 
 # As Sidebery doesn't support automatically (without user input) installing styles/themes,
 # this method unfortunately modifies the extension directly.
@@ -107,13 +125,16 @@ def _update_sidebery(profile_dir: str):
         sidebery_repack_path = _repack_sidebery(sidebery_build_dir)
 
         # Backup the current extension before replacing it
-        backup_file_path = f"{sidebery_src_path}_{datetime.now().strftime('%Y%m%d%H%M%S')}.bak"
-        move(sidebery_src_path, backup_file_path)
-        print(f"Backed up the current Sidebery extension to '{backup_file_path}'")
+        _backup_sidebery(sidebery_src_path)
 
         # Copy the modified pack back into the user profile
         copy(sidebery_repack_path, sidebery_src_path)
         print('Successfully installed theme/styles into Sidebery')
+
+def _backup_sidebery(sidebery_src_path: str):
+    os.makedirs(EXTENSIONS_BACKUP_DIR, exist_ok=True)
+    backup_path = move(sidebery_src_path, EXTENSIONS_BACKUP_DIR)
+    print(f"Backed up the current Sidebery extension to '{backup_path}'")
 
 def _unpack_sidebery(sidebery_src_path: str) -> str:
     sidebery_archive_dest_path = os.path.join(EXTENSIONS_BUILD_DIR, SIDEBERY_EXTENSION_FILENAME)
