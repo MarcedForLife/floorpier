@@ -11,10 +11,12 @@ It has the following advantages:
 
 import os
 import sys
+from datetime import datetime
 from shutil import (
     copy,
     copytree,
     ignore_patterns,
+    move,
     rmtree,
     unpack_archive,
     make_archive)
@@ -43,9 +45,8 @@ def _get_profile_dir() -> str:
         # TODO: Confirm default Linux profile path matches MacOS
         case 'darwin' | 'linux':
             base_dir = f"{Path.home()}/Library/Application Support/Floorp/Profiles"
-        # TODO: Check and add Windows profile path
         case 'win32':
-            raise NotImplementedError('Windows is not a supported platform by the installer')
+            base_dir = f"{Path.home()}/AppData/Roaming/Floorp/Profiles"
         case _:
             raise NotImplementedError(
                 "The current platform ('{sys.platform}') is not supported by the installer")
@@ -90,11 +91,12 @@ def _install_user_chrome(profile_dir: str):
         f"You are about to copy the contents of '{PROFILE_BUILD_DIR}' into '{profile_dir}', continue? (y/n): ")
     if user_input.lower() == 'y':
         copytree(PROFILE_BUILD_DIR, profile_dir, dirs_exist_ok=True)
+        print('Successfully installed the theme and options into the profile directory')
 
 # As Sidebery doesn't support automatically (without user input) installing styles/themes,
 # this method unfortunately modifies the extension directly.
 def _update_sidebery(profile_dir: str):
-    sidebery_src_path = os.path.join(profile_dir, f"extensions/{SIDEBERY_EXTENSION_FILENAME}")
+    sidebery_src_path = os.path.join(profile_dir, 'extensions', SIDEBERY_EXTENSION_FILENAME)
     os.makedirs(EXTENSIONS_BUILD_DIR, exist_ok=True)
 
     # TODO: Validate Sidebery exists
@@ -103,8 +105,15 @@ def _update_sidebery(profile_dir: str):
         sidebery_build_dir = _unpack_sidebery(sidebery_src_path)
         _update_sidebery_themes(sidebery_build_dir)
         sidebery_repack_path = _repack_sidebery(sidebery_build_dir)
+
+        # Backup the current extension before replacing it
+        backup_file_path = f"{sidebery_src_path}_{datetime.now().strftime('%Y%m%d%H%M%S')}.bak"
+        move(sidebery_src_path, backup_file_path)
+        print(f"Backed up the current Sidebery extension to '{backup_file_path}'")
+
         # Copy the modified pack back into the user profile
         copy(sidebery_repack_path, sidebery_src_path)
+        print('Successfully installed theme/styles into Sidebery')
 
 def _unpack_sidebery(sidebery_src_path: str) -> str:
     sidebery_archive_dest_path = os.path.join(EXTENSIONS_BUILD_DIR, SIDEBERY_EXTENSION_FILENAME)
@@ -152,7 +161,7 @@ def _repack_sidebery(sidebery_build_dir: str) -> str:
 
 if __name__ == "__main__":
     # Make sure previous builds are removed before continuing
-    rmtree(BUILD_DIR)
+    rmtree(BUILD_DIR, ignore_errors=True)
     _prepare_files()
     _profile_dir = _get_profile_dir()
     _install_user_chrome(_profile_dir)
