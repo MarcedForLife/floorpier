@@ -3,7 +3,7 @@
 #sidebar-box {
     --uc-sidebar-width: 40px;
     --uc-sidebar-hover-width: 260px;
-    --uc-autohide-sidebar-delay: 1ms;
+    --uc-autohide-sidebar-delay: 50ms;
     /* Waiting time before hiding sidebar */
     position: relative;
     min-width: var(--uc-sidebar-width) !important;

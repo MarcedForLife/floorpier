@@ -10,3 +10,8 @@
 .tab-background[multiselected="true"] {
     background: rgba(0, 0, 0, .2) !important;
 }
+
+/* Hide the default tabs toolbar */
+#TabsToolbar {
+    visibility: collapse;
+}
